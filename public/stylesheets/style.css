@@ -25,7 +25,17 @@ header, nav, section {
 footer {
 	background:#eee;
 	text-align:center;
+	clear: both;
 }
 nav span {
 	margin:0px 10px 0px 0px;
+}
+.author {
+	background:#eee;
+	padding:0px 0px 20px 0px;
+}
+.about {
+	background:#eee;
+	text-align:left;
+	padding:0px;
 }
