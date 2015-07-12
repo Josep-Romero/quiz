@@ -37,7 +37,7 @@ exports.Quiz = Quiz;
 sequelize.sync().then(
 	function() {
 		//console.log('inicio sync'); // control de paso de programa
-		Quiz.count().success( //success(...) ejecuta el manejador una vez creada la tabla
+		Quiz.count().then( //then(...) ejecuta el manejador una vez creada la tabla
 			function (count) {
 				if (count===0) {
 					console.log('La tabla Quiz esta vacía. Se procede a llenarla con la pregunta inicial'); // control de paso de programa
@@ -46,7 +46,7 @@ sequelize.sync().then(
 							respuesta: 'Roma'
 						}
 					)
-					.success(
+					.then(
 						function(){console.log('... tabla Quiz inicializada correctamente')}
 					);
 				} else {
