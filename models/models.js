@@ -42,10 +42,23 @@ sequelize.sync().then(
 				if (count===0) {
 					console.log('La tabla Quiz esta vacía. Se procede a llenarla con la pregunta inicial'); // control de paso de programa
 					// para cada pregunta a añadir se indican los pares "nombre columna": "valor columna"
-					Quiz.create({ pregunta: 'Capital de Italia',   respuesta:'Roma' });
+					Quiz.create({ pregunta: 'Capital de Italia',   respuesta:'Roma' })
+					.then(
+						function(){console.log('... tabla Quiz inicializada')}
+					);
+				} else if (count===1) {
+					console.log('La tabla Quiz tiene 2 filas, sele añade la tercera'); // control de paso de programa
+					// para cada pregunta a añadir se indican los pares "nombre columna": "valor columna"
 					Quiz.create({ pregunta: 'Capital de Portugal', respuesta:'Lisboa' })
 					.then(
-						function(){console.log('... tabla Quiz inicializada correctamente')}
+						function(){console.log('... tabla Quiz ampliada a 2 preguntas')}
+					);
+				} else if (count===2) {
+					console.log('La tabla Quiz tiene 2 filas, sele añade la tercera'); // control de paso de programa
+					// para cada pregunta a añadir se indican los pares "nombre columna": "valor columna"
+					Quiz.create({ pregunta: 'Capital de Inglaterra', respuesta:'Londres' })
+					.then(
+						function(){console.log('... tabla Quiz ampliada a 3 preguntas')}
 					);
 				} else {
 					console.log('La tabla Quiz tiene datos. No se modifica.'); // control de paso de programa
