@@ -28,7 +28,8 @@ exports.index = function(req, res) {
 	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
 	textoABuscar = '%'+(req.query.search||'').replace(/ /g, '%')+'%';
 	models.Quiz.findAll(
-		{ where: {pregunta: {like: textoABuscar}}, order: 'pregunta' }
+//		{ where: {pregunta: {like: textoABuscar}}, order: 'pregunta' }
+		{ where: {pregunta: {like: textoABuscar}} }
 	).then(
 		function(quizes) {
 			res.render('quizes/index.ejs', {quizes: quizes})
