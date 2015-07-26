@@ -7,6 +7,9 @@ body {
 h2 span, section h3 {
 	display:none;
 }
+#ErrorMsgs {
+	{color: #f61; font-size: smaler}
+}
 body {
 	font-size:xx-large;
 }

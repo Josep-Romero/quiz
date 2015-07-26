@@ -12,6 +12,9 @@ nav {
 nav span {
 	margin:0px 100px 0px 0px;
 }
+#ErrorMsgs {
+	{color: #f61; font-size: smaler}
+}
 section {
 	float:right;
 	width:80%;

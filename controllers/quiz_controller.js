@@ -32,7 +32,7 @@ exports.index = function(req, res) {
 //		{ where: {pregunta: {like: textoABuscar}} }
 	).then(
 		function(quizes) {
-			res.render('quizes/index.ejs', {quizes: quizes})
+			res.render('quizes/index.ejs', {quizes: quizes, errors: [] })
 		}	
 	).catch(
 		function(error) { next(error);} 
@@ -41,15 +41,15 @@ exports.index = function(req, res) {
 
 // GET /quizes/:id
 exports.show = function(req, res) {
-	res.render('quizes/show', {quiz: req.quiz})
+	res.render('quizes/show', {quiz: req.quiz, errors: [] })
 };
 
 // GET /quizes/:id/answer
 exports.answer = function(req, res) {
 	if (req.query.respuesta.toUpperCase() === req.quiz.respuesta.toUpperCase()) {
-		res.render('quizes/answer', {quiz: req.quiz, respuesta: 'Correcto'});
+		res.render('quizes/answer', {quiz: req.quiz, respuesta: 'Correcto', errors: [] });
 	} else {
-		res.render('quizes/answer', {quiz: req.quiz, respuesta: 'Incorrecto'});
+		res.render('quizes/answer', {quiz: req.quiz, respuesta: 'Incorrecto', errors: [] });
 	}
 };
 
@@ -57,18 +57,28 @@ exports.answer = function(req, res) {
 exports.new = function(req, res) {
 	// crea objeto Quiz
 	var quiz = models.Quiz.build( {pregunta:"Pregunta", respuesta:"Respuesta"} );
-	res.render('quizes/new', {quiz: quiz});
+	res.render('quizes/new', {quiz: quiz, errors: [] });
 };
 
 // POST /quizes/create
 exports.create = function(req, res) {
 	// crea objeto Quiz
 	var quiz = models.Quiz.build( req.body.quiz );
-	// guarda en BBDD los campos pregunta y respuesta de quiz
-	quiz.save( {fields: ["pregunta", "respuesta"] } ).then(function(){
-		// redirecciona a HTTP (URL relativo) lista de preguntas
-		res.redirect('/quizes');
-	})
+	// se valida el objeto quiz
+	quiz.validate().then(
+		function(err) {
+			if (err) {
+				// Informa del error
+				res.render('quizes/new', {quiz: quiz, errors: err.errors});
+			} else {
+				// Guarda en la base de datos los campos pregunta y respuesta de quiz
+				quiz.save( {fields: ["pregunta", "respuesta"] } ).then(function(){
+					// redirecciona a HTTP (URL relativo) lista de preguntas
+					res.redirect('/quizes');
+				})
+			}
+		}
+	);
 };
 
 // GET /quizes/author
