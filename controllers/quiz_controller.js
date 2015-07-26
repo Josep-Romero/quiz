@@ -83,7 +83,7 @@ exports.create = function(req, res) {
 
 // GET /quizes/author
 exports.author = function(req, res) {
-	res.render('author');
+	res.render('author', {errors: []});
 };
 
 // control de paso de programa
