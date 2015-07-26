@@ -81,6 +81,35 @@ exports.create = function(req, res) {
 	);
 };
 
+// GET /quizes/:id/edit
+exports.edit = function(req, res) {
+	// autoload de instancia de quiz
+	var quiz = req.quiz;
+	res.render('quizes/edit', {quiz: quiz, errors: [] });
+};
+
+// PUT /quizes/:id
+exports.update = function(req, res) {
+	// recupera valores del formulario
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta;
+	// se valida el objeto quiz
+	req.quiz.validate().then(
+		function(err) {
+			if (err) {
+				// Informa del error
+				res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+			} else {
+				// Guarda en la base de datos los campos pregunta y respuesta de quiz
+				req.quiz.save( {fields: ["pregunta", "respuesta"] } ).then(function(){
+					// redirecciona a HTTP (URL relativo) lista de preguntas
+					res.redirect('/quizes');
+				})
+			}
+		}
+	);
+};
+
 // GET /quizes/author
 exports.author = function(req, res) {
 	res.render('author', {errors: []});
