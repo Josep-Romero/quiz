@@ -6,7 +6,12 @@ var models= require('../models/models.js');
 
 // Autoload Factoriza el código si la ruta incluye :quizId
 exports.load = function(req, res, next, quizId) {
-	models.Quiz.find(quizId).then(
+console.log('/n entra en autoload /n');
+
+	models.Quiz.find({
+		where: {id: Number(quizId)},
+		include: [{model: models.Comment}]
+		}).then(
 		function(quiz) {
 			if (quiz) {
 				req.quiz = quiz;
@@ -28,7 +33,7 @@ exports.index = function(req, res) {
 	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
 	textoABuscar = '%'+(req.query.search||'').replace(/ /g, '%')+'%';
 	models.Quiz.findAll(
-		{ where: {pregunta: {like: textoABuscar}}, order: ['pregunta'] }
+		{ where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] }
 //		{ where: {pregunta: {like: textoABuscar}} }
 	).then(
 		function(quizes) {
@@ -56,7 +61,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
 	// crea objeto Quiz
-	var quiz = models.Quiz.build( {pregunta:"", respuesta:""} );
+	var quiz = models.Quiz.build( {tematica:"", pregunta:"", respuesta:""} );
 	res.render('quizes/new', {quiz: quiz, errors: [] });
 };
 
@@ -72,7 +77,7 @@ exports.create = function(req, res) {
 				res.render('quizes/new', {quiz: quiz, errors: err.errors});
 			} else {
 				// Guarda en la base de datos los campos pregunta y respuesta de quiz
-				quiz.save( {fields: ["pregunta", "respuesta"] } ).then(function(){
+				quiz.save( {fields: ["tematica", "pregunta", "respuesta"] } ).then(function(){
 					// redirecciona a HTTP (URL relativo) lista de preguntas
 					res.redirect('/quizes');
 				})
@@ -90,7 +95,9 @@ exports.edit = function(req, res) {
 
 // PUT /quizes/:id
 exports.update = function(req, res) {
+console.log('-->' + req.body.quiz.tematica + '<--');
 	// recupera valores del formulario
+	req.quiz.tematica = req.body.quiz.tematica;
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
 	// se valida el objeto quiz
@@ -101,7 +108,7 @@ exports.update = function(req, res) {
 				res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
 			} else {
 				// Guarda en la base de datos los campos pregunta y respuesta de quiz
-				req.quiz.save( {fields: ["pregunta", "respuesta"] } ).then(function(){
+				req.quiz.save( {fields: ["tematica", "pregunta", "respuesta"] } ).then(function(){
 					// redirecciona a HTTP (URL relativo) lista de preguntas
 					res.redirect('/quizes');
 				})

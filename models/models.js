@@ -30,8 +30,19 @@ var sequelize = new Sequelize(DB_name, user, pwd,
 
 // Importar la definición de la tabla Quiz en quiz.js
 var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
+
+// Importar la definición de la tabla Quiz en quiz.js
+var Comment = sequelize.import(path.join(__dirname, 'comment'));
+
+// Relacionar 1 Quiz con N Comment
+Comment.belongsTo(Quiz);
+Quiz.hasMany(Comment);
+
 // exportar la definición de la tabla Quiz
 exports.Quiz = Quiz; 
+
+// exportar la definición de la tabla Comment
+exports.Comment = Comment; 
 
 // sequelize.sync() crea e inicializa la tabla de preguntas en la BBDD
 sequelize.sync().then(
@@ -44,18 +55,19 @@ sequelize.sync().then(
 			// para cada pregunta a añadir se indican los pares "nombre columna": "valor columna"
 				if (count===0) {
 					console.log('La tabla Quiz esta vacía. Se procede a llenarla con la pregunta inicial'); // control de paso de programa
-					Quiz.create({ pregunta: 'Capital de Italia',   respuesta:'Roma' })
+					Quiz.create({ tematica: 'Humanidades', pregunta: 'Capital de Italia',   respuesta:'Roma' })
 						.then( function(){console.log('... tabla Quiz inicializada')} );
 				} else if (count===1) {
 					console.log('La tabla Quiz tiene 2 filas, se le añade la tercera'); // control de paso de programa
-					Quiz.create({ pregunta: 'Capital de Portugal', respuesta:'Lisboa' })
+					Quiz.create({ tematica: 'Humanidades', pregunta: 'Capital de Portugal', respuesta:'Lisboa' })
 						.then( function(){console.log('... tabla Quiz ampliada a 2 preguntas')} );
 				} else if (count===2) {
 					console.log('La tabla Quiz tiene 2 filas, sele añade la tercera'); // control de paso de programa
-					Quiz.create({ pregunta: 'Capital de Inglaterra', respuesta:'Londres' })
+					Quiz.create({ tematica: 'Humanidades', pregunta: 'Capital de Inglaterra', respuesta:'Londres' })
 						.then( function(){console.log('... tabla Quiz ampliada a 3 preguntas')} );
 				} else {
 					console.log('La tabla Quiz tiene datos. No se modifica.'); // control de paso de programa
+					//Quiz.addcolumn(tematica:  { type: DataTypes.STRING, validate: {notEmpty: { msg: "-> Falta Temática"} } })
 				};
 			}
 		);

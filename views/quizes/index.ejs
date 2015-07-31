@@ -1,12 +1,19 @@
-	<form method="get" action="/quizes">        
-		Preguntas acerca de <p>
-		<input type="text" name="search" placeholder="Texto a buscar "/>
-		<input type="submit" value="Filtrar"/>
+	<form method="get" action="/quizes">
+			<input type="text" name="search" placeholder="Texto a buscar "/>
+			<input type="submit" value="Filtrar"/>
+			<a href="/quizes/new"><button type="button">Nueva </button></a>
 	</form>
 
 	<table>
 		<% var i; for (i=0; i < quizes.length; i++) { %>
 			<tr>
+				<td>
+					<% if (quizes[i].tematica==="otro") { %>Otro <% } %>
+					<% if (quizes[i].tematica==="humanidades") { %>Humanidades <% } %>
+					<% if (quizes[i].tematica==="ocio") { %>Ocio <% } %>
+					<% if (quizes[i].tematica==="ciencia") { %>Ciencia <% } %>
+					<% if (quizes[i].tematica==="tecnologia") { %>Tecnologia <% } %>
+				</td>
 				<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
 				<td><a href="quizes/<%= quizes[i].id %>/edit"><button>Editar </button></a></td>
 				<td>
@@ -17,4 +24,4 @@
 			</tr>
 		<% } %>
 	</table><p>
-	<a href="/quizes/new"><button type="button">Crear pregunta </button></a>
+	

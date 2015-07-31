@@ -4,7 +4,7 @@ body {
 #page-wrap:after {
 	content:"Smartphone Layout";
 }
-h2 span, section h3 {
+h2 span, section h3, label.rem {
 	display:none;
 }
 #ErrorMsgs {
@@ -13,7 +13,7 @@ h2 span, section h3 {
 body {
 	font-size:xx-large;
 }
-footer , input{
+footer , input, button {
 	font-size:large;
 }
 .author {
