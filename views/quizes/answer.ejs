@@ -1,8 +1,6 @@
 		<p>
-		<%= respuesta %>
+		<%= respuesta %><p>
 		<% if (respuesta=='Incorrecto') { %>
-			<a href="/quizes/<%= quiz.id %>"> Reintentar </a>
+			<a href="/quizes/<%= quiz.id %>"> <button type="button">Reintentar </button></a>
 		<% } %>
-		<p>
-		<a href="/quizes"> Volver </a><p>
-		</p>
+		<a href="/quizes/select"><button type="button">Volver </button></a>

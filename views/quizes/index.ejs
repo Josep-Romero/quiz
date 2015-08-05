@@ -1,5 +1,5 @@
 	<form method="get" action="/quizes">
-			<input type="text" name="search" placeholder="Texto a buscar "/>
+			<input type="text" name="search" placeholder="Texto a buscar " value="<%= select %>"/>
 			<input type="submit" value="Filtrar"/>
 			<a href="/quizes/new"><button type="button">Nueva </button></a>
 	</form>
@@ -14,8 +14,8 @@
 					<% if (quizes[i].tematica==="ciencia") { %>Ciencia <% } %>
 					<% if (quizes[i].tematica==="tecnologia") { %>Tecnologia <% } %>
 				</td>
-				<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
-				<td><a href="quizes/<%= quizes[i].id %>/edit"><button>Editar </button></a></td>
+				<td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
+				<td><a href="/quizes/<%= quizes[i].id %>/edit"><button>Editar </button></a></td>
 				<td>
 					<form method="post" action="/quizes/<%= quizes[i].id %>?_method=delete">
 						<button type="submit" onClick="return confirm('¿Borrar: <%= quizes[i].pregunta %>?');">Borrar </button>

@@ -2,7 +2,10 @@
 //console.log('entra en quiz_controller.js');
 
 // Importa el modelo para acceder a la BBDD
-var models= require('../models/models.js');
+var models = require('../models/models.js');
+
+// Guarda la última busca efectuada
+var ultimoFiltro = ''
 
 // Autoload Factoriza el código si la ruta incluye :quizId
 exports.load = function(req, res, next, quizId) {
@@ -26,18 +29,40 @@ console.log('/n entra en autoload /n');
 };
 
 // GET /quizes
-exports.index = function(req, res) {
+exports.allindex = function(req, res) {
 	// Se prepara la cadena de caracteres del texto a buscar, 
 	// - con caracteres '%' al principio y al final
 	// - sustituyendo los espacios por '%'
 	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
-	textoABuscar = '%'+(req.query.search||'').replace(/ /g, '%')+'%';
+	ultimoFiltro = req.query.search||''
+	textoABuscar = '%'+(ultimoFiltro||'').replace(/ /g, '%')+'%';
+
 	models.Quiz.findAll(
 		{ where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] }
 //		{ where: {pregunta: {like: textoABuscar}} }
 	).then(
 		function(quizes) {
-			res.render('quizes/index.ejs', {quizes: quizes, errors: [] })
+			res.render('quizes/index.ejs', {quizes: quizes, select: ultimoFiltro, errors: [] })
+		}	
+	).catch(
+		function(error) { next(error);} 
+	);
+};
+
+// GET /quizes
+exports.selectindex = function(req, res) {
+	// Se prepara la cadena de caracteres del texto a buscar, 
+	// - con caracteres '%' al principio y al final
+	// - sustituyendo los espacios por '%'
+	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
+	console.log('Entra en filtrar con ' + ultimoFiltro);
+	textoABuscar = '%'+(ultimoFiltro||'').replace(/ /g, '%')+'%';
+	models.Quiz.findAll(
+		{ where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] }
+//		{ where: {pregunta: {like: textoABuscar}} }
+	).then(
+		function(quizes) {
+			res.render('quizes/index.ejs', {quizes: quizes, select: ultimoFiltro, errors: [] })
 		}	
 	).catch(
 		function(error) { next(error);} 
