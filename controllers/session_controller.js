@@ -1,6 +1,15 @@
 // control de paso de programa
 //console.log('entra en session_controller.js');
 
+// MW de autorización de accesos HTTP restringidos
+exports.loginRequired = function(req, res, next) {
+	if (req.session.user) {
+		next();
+	} else {
+		res.redirect('/login');
+	}
+};
+
 // Get /login   -- Formulario de login
 exports.new = function(req, res) {
     var errors = req.session.errors || {};
