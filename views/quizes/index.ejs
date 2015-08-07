@@ -1,5 +1,5 @@
-	<form method="get" action="/quizes">
-			<input type="text" name="search" placeholder="Texto a buscar " value="<%= select %>"/>
+	<form method="get" action="/quizes/filter">
+			<input type="text" name="search" placeholder="Texto a buscar " value="<%= filter %>"/>
 			<input type="submit" value="Filtrar"/>
 			<% if (session.user) { %>
 				<a href="/quizes/new"><button type="button">Nueva </button></a>
@@ -10,11 +10,8 @@
 		<% var i; for (i=0; i < quizes.length; i++) { %>
 			<tr>
 				<td>
-					<% if (quizes[i].tematica==="otro") { %>Otro <% } %>
-					<% if (quizes[i].tematica==="humanidades") { %>Humanidades <% } %>
-					<% if (quizes[i].tematica==="ocio") { %>Ocio <% } %>
-					<% if (quizes[i].tematica==="ciencia") { %>Ciencia <% } %>
-					<% if (quizes[i].tematica==="tecnologia") { %>Tecnologia <% } %>
+					<!-- Se presenta la temática con la primera letra en mayúsculas -->
+					<%= quizes[i].tematica.charAt(0).toUpperCase() + quizes[i].tematica.slice(1)  %>
 				</td>
 				<td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
 				<% if (session.user) { %>

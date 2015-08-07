@@ -1,4 +1,4 @@
-//console.log('entra en quiz.js'); // control de paso de programa
+console.log('entra en quiz.js'); // control de paso de programa
 
 // Definición el modelo de Quiz
 module.exports = function(sequelize, DataTypes) {
@@ -10,4 +10,4 @@ module.exports = function(sequelize, DataTypes) {
 	);
 }
 
-//console.log('sale de quiz.js'); // control de paso de programa
+console.log('sale de quiz.js'); // control de paso de programa

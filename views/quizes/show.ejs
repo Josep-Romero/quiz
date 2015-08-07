@@ -1,10 +1,20 @@
 		<form method="get" action="/quizes/<%= quiz.id %>/answer">
-			Pregunta de <%= quiz.tematica %>: <%= quiz.pregunta %> <p>
+			<strong>Pregunta de <%= quiz.tematica %>:</strong> <p> <%= quiz.pregunta %> <p>
 			<input type="text" name="respuesta" placeholder="Responda aqui "/>
 			<input type="submit" value="Enviar"/>
-			<a href="/quizes/select"><button type="button">Volver </button></a>
+			<a href="/quizes"><button type="button">Volver </button></a>
 		</form>
 		<p> <strong>Comentarios:</strong><a href="/quizes/<%= quiz.id %>/comments/new"><button>Añadir comentario</button></a></p>
 		<% for (index in quiz.Comments) { %>
-			<p> <%= quiz.Comments[index].texto %> </p>
+			<% if (quiz.Comments[index].publicado || session.user) {%>
+				<p> 
+				<%= quiz.Comments[index].texto %> 
+				<% if (session.user) {%>
+					<a href="/quizes/<%= quiz.id %>/comments/<%= quiz.Comments[index].id %>/delete"><button type="button">Borrar </button></a>
+					<% if (!quiz.Comments[index].publicado) {%>
+						<a href="/quizes/<%= quiz.id %>/comments/<%= quiz.Comments[index].id %>/publish"><button type="button">Publicar </button></a>
+					<% } %>
+				<% } %>
+				</p>
+			<% } %>
 		<% } %>

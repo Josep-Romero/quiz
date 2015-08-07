@@ -1,16 +1,16 @@
 // control de paso de programa
-//console.log('entra en quiz_controller.js');
+// nivel = nivel + ' ';
+console.log('entra en quiz_controller.js');
 
 // Importa el modelo para acceder a la BBDD
 var models = require('../models/models.js');
 
 // Guarda la última busca efectuada
-var ultimoFiltro = ''
+var filtroActual = ''
 
 // Autoload Factoriza el código si la ruta incluye :quizId
 exports.load = function(req, res, next, quizId) {
-console.log('/n entra en autoload /n');
-
+	console.log('entra en quiz_controler.load');
 	models.Quiz.find({
 		where: {id: Number(quizId)},
 		include: [{model: models.Comment}]
@@ -26,47 +26,28 @@ console.log('/n entra en autoload /n');
 	).catch(
 		function(error) { next(error);} 
 	);
+	console.log('sale de quiz_controler.load');
+};
+
+// GET /quizes/filter
+exports.filter = function(req, res, next) {
+	// Se refresca la variable filtroActual con el valor recibido en search
+	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
+	filtroActual = req.query.search||'';
+	next();
 };
 
 // GET /quizes
-exports.allindex = function(req, res) {
-	// Se prepara la cadena de caracteres del texto a buscar, 
+exports.index = function(req, res) {
+	// Se prepara la cadena de caracteres del texto a buscar a partir del contenido de la variable filtroActual
 	// - con caracteres '%' al principio y al final
 	// - sustituyendo los espacios por '%'
-	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
-	ultimoFiltro = req.query.search||''
-	textoABuscar = '%'+(ultimoFiltro||'').replace(/ /g, '%')+'%';
+	console.log('Aplicando el filtro "' + filtroActual + '"');
+	textoABuscar = '%'+(filtroActual||'').replace(/ /g, '%')+'%';
 
-	models.Quiz.findAll(
-		{ where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] }
-//		{ where: {pregunta: {like: textoABuscar}} }
-	).then(
-		function(quizes) {
-			res.render('quizes/index.ejs', {quizes: quizes, select: ultimoFiltro, errors: [] })
-		}	
-	).catch(
-		function(error) { next(error);} 
-	);
-};
-
-// GET /quizes
-exports.selectindex = function(req, res) {
-	// Se prepara la cadena de caracteres del texto a buscar, 
-	// - con caracteres '%' al principio y al final
-	// - sustituyendo los espacios por '%'
-	// Si no se recibe el parámetro search se asume una cadena vacía, con lo que se mostrará la lista con todas las preguntas.
-	console.log('Entra en filtrar con ' + ultimoFiltro);
-	textoABuscar = '%'+(ultimoFiltro||'').replace(/ /g, '%')+'%';
-	models.Quiz.findAll(
-		{ where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] }
-//		{ where: {pregunta: {like: textoABuscar}} }
-	).then(
-		function(quizes) {
-			res.render('quizes/index.ejs', {quizes: quizes, select: ultimoFiltro, errors: [] })
-		}	
-	).catch(
-		function(error) { next(error);} 
-	);
+	models.Quiz.findAll( { where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] } )
+		.then( function(quizes) { res.render('quizes/index.ejs', {quizes: quizes, filter: filtroActual, errors: [] }) } )
+		.catch( function(error) { next(error);} );
 };
 
 // GET /quizes/:id
@@ -155,4 +136,5 @@ exports.author = function(req, res) {
 };
 
 // control de paso de programa
-//console.log('sale de quiz_controller.js');
+console.log('sale de quiz_controller.js');
+// nivel = nivel.substring(1);

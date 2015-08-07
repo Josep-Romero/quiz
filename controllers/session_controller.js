@@ -1,5 +1,5 @@
 // control de paso de programa
-//console.log('entra en session_controller.js');
+console.log('entra en session_controller.js');
 
 // MW de autorización de accesos HTTP restringidos
 exports.loginRequired = function(req, res, next) {
@@ -48,4 +48,4 @@ exports.destroy = function(req, res) {
 };
 
 // control de paso de programa
-//console.log('sale de session_controller.js');
+console.log('sale de session_controller.js');

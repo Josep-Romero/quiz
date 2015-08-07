@@ -1,4 +1,4 @@
-//console.log('entra en models.js'); // control de paso de programa
+console.log('entra en models.js'); // control de paso de programa
 
 var path = require('path');
 
@@ -62,7 +62,7 @@ sequelize.sync().then(
 					Quiz.create({ tematica: 'Humanidades', pregunta: 'Capital de Portugal', respuesta:'Lisboa' })
 						.then( function(){console.log('... tabla Quiz ampliada a 2 preguntas')} );
 				} else if (count===2) {
-					console.log('La tabla Quiz tiene 2 filas, sele añade la tercera'); // control de paso de programa
+					console.log('La tabla Quiz tiene 2 filas, se le añade la tercera'); // control de paso de programa
 					Quiz.create({ tematica: 'Humanidades', pregunta: 'Capital de Inglaterra', respuesta:'Londres' })
 						.then( function(){console.log('... tabla Quiz ampliada a 3 preguntas')} );
 				} else {
@@ -75,4 +75,4 @@ sequelize.sync().then(
 );
 
 // control de paso de programa
-//console.log('sale de models.js');
+console.log('sale de models.js');

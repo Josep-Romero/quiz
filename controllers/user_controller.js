@@ -1,5 +1,5 @@
 // control de paso de programa
-//console.log('entra en user_controller.js');
+console.log('entra en user_controller.js');
 
 var users = {
 admin: {id:1, username:"admin", password:"1234"},
@@ -18,4 +18,4 @@ exports.autenticar = function(login, password, callback) {
 };
 
 // control de paso de programa
-//console.log('sale de user_controller.js');
+console.log('sale de user_controller.js');
