@@ -9,7 +9,6 @@ var partials = require('express-partials');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var routes = require('./routes/index');
-// Eliminado en paso 1 ==> var users = require('./routes/users');
 
 var app = express();
 
@@ -19,21 +18,21 @@ app.set('view engine', 'ejs');
 
 app.use(partials());
 
-// uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser('Quiz2015'));
-app.use(session());
+app.use(session({ secret: 'Quiz2015', resave: false, saveUninitialized: true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Helpers dinamicos
 app.use(function(req, res, next) {
-	// guardat path en session.redir para despues de login
-	if (!req.path.match(/\/login|\/logout/)) {
+	// Inicializa req.session.redir para que no de error en caso que la primera transacción sea LOGIN
+	req.session.redir = req.session.redir||'/';
+	// guardat path en req.session.redir para después de login o logout
+	if (req.method === 'GET' && !req.path.match(/\/login|\/logout/)) {
 		req.session.redir = req.path;
 	}
 	// Hacer visible req.session en las vistas
@@ -41,12 +40,51 @@ app.use(function(req, res, next) {
 	next();
 });
 
+// Ver si session ha caducado
+app.use(function(req, res, next) {
+	// Captura la hora actual
+	timestamp = new Date();
+	// Verifica si hay una sesión activa
+	if (req.session.user) {
+		// En caso afirmativo, verifica si ha superado el tiempo límite sin operar
+		if (timestamp.getTime() > req.session.timeConnect['timeConnect'] + 30000) {
+			// En caso afirmativo, destruye la sesión
+			console.log('sesion caducada ' + timestamp.getTime() + '/' + req.session.timeConnect['timeConnect'] + ', se destruyen las variables de sesión');
+			delete req.session.user;
+			delete req.session.timeConnect;
+			req.session.errors = [{"message": 'La sesión ha expirado'}];
+			next();
+		} else {
+			// Si no ha superado el tiempo límite sin operar, actualiza la hora de la última transacción
+			console.log('sesion activa ' + timestamp.getTime() + '/' + req.session.timeConnect['timeConnect'] + ', se refresca timeConnect');
+			req.session.timeConnect = {timeConnect:timestamp.getTime()};
+			next();
+		}
+	} else {
+		// Si no hay una sesión activa, no hace nada
+		console.log('sin sesion ' + timestamp.getTime());
+		next();
+	};
+});
 
+// MW de comprobación. No es operativo, se ha usado para hacer un seguimiento de la lógica del proceso
+app.use(function(req, res, next) {
+	console.log('\ndespues de SESION y antes de ROUTES');
+    next();
+});
+
+// Enrutamiento de las páginas
 app.use('/', routes);
-// Eliminado en paso 1 ==> app.use('/users', users);
+
+// MW de comprobación. No es operativo, se ha usado para hacer un seguimiento de la lógica del proceso
+app.use(function(req, res, next) {
+	console.log('\ndespues de ROUTES');
+    next();
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+	console.log('\nerror 404');
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -54,10 +92,10 @@ app.use(function(req, res, next) {
 
 // error handlers
 
-// development error handler
-// will print stacktrace
+// development error handler, will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
+		console.log('\nver status en desarrollo');
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -67,9 +105,9 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
+// production error handler, no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+	console.log('\nver status en producción');
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
@@ -77,6 +115,5 @@ app.use(function(err, req, res, next) {
 		errors: []
     });
 });
-
 
 module.exports = app;

@@ -1,5 +1,4 @@
 // control de paso de programa
-// nivel = nivel + ' ';
 console.log('entra en quiz_controller.js');
 
 // Importa el modelo para acceder a la BBDD
@@ -10,7 +9,6 @@ var filtroActual = ''
 
 // Autoload Factoriza el código si la ruta incluye :quizId
 exports.load = function(req, res, next, quizId) {
-	console.log('entra en quiz_controler.load');
 	models.Quiz.find({
 		where: {id: Number(quizId)},
 		include: [{model: models.Comment}]
@@ -26,7 +24,6 @@ exports.load = function(req, res, next, quizId) {
 	).catch(
 		function(error) { next(error);} 
 	);
-	console.log('sale de quiz_controler.load');
 };
 
 // GET /quizes/filter
@@ -37,12 +34,20 @@ exports.filter = function(req, res, next) {
 	next();
 };
 
+// GET /quizes/all
+exports.allquestions = function(req, res, next) {
+	// Se limpia la variable filtroActual
+	filtroActual = '';
+	models.Quiz.findAll( { order: ['tematica', 'pregunta'] } )
+		.then( function(quizes) { res.render('quizes/index.ejs', {quizes: quizes, filter: filtroActual, errors: [] }) } )
+		.catch( function(error) { next(error);} );
+};
+
 // GET /quizes
-exports.index = function(req, res) {
+exports.filterquestions = function(req, res) {
 	// Se prepara la cadena de caracteres del texto a buscar a partir del contenido de la variable filtroActual
 	// - con caracteres '%' al principio y al final
 	// - sustituyendo los espacios por '%'
-	console.log('Aplicando el filtro "' + filtroActual + '"');
 	textoABuscar = '%'+(filtroActual||'').replace(/ /g, '%')+'%';
 
 	models.Quiz.findAll( { where: {pregunta: {like: textoABuscar}}, order: ['tematica', 'pregunta'] } )
@@ -101,7 +106,6 @@ exports.edit = function(req, res) {
 
 // PUT /quizes/:id
 exports.update = function(req, res) {
-console.log('-->' + req.body.quiz.tematica + '<--');
 	// recupera valores del formulario
 	req.quiz.tematica = req.body.quiz.tematica;
 	req.quiz.pregunta = req.body.quiz.pregunta;
@@ -137,4 +141,3 @@ exports.author = function(req, res) {
 
 // control de paso de programa
 console.log('sale de quiz_controller.js');
-// nivel = nivel.substring(1);

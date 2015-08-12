@@ -6,38 +6,33 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
+var statisticsController = require('../controllers/statistics_controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
 	res.render('index', { title: 'Quiz', errors: [] });
 });
 
-// Autoload de comandos con :quizId
-
-console.log('llama a autoload de quiz'); // control de paso de programa
+// Autoload de comandos con :quizId o :commentId
 router.param('quizId', quizController.load);		// con :quizId
-
-console.log('llama a autoload de comment'); // control de paso de programa
 router.param('commentId', commentController.load);	// con :commentId
 
-console.log('... seguimos'); // control de paso de programa
-
-
 // Definición de rutas de sesión
-router.get('/login', sessionController.new); // formulario login
-router.post('/login', sessionController.create); // crear sesión
-router.get('/logout', sessionController.destroy); // destruir sesión
+router.get('/login', sessionController.new); // presentar el formulario login
+router.post('/login', sessionController.create); // crear la sesión
+router.get('/logout', sessionController.destroy); // destruir la sesión
 
 // Definición de rutas de Quizes
-router.get('/quizes', quizController.index);
-router.get('/quizes/filter', quizController.filter, quizController.index);
-router.get('/quizes/:quizId(\\d+)', quizController.show);
-router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
-router.get('/quizes/new', sessionController.loginRequired, quizController.new);
-router.post('/quizes/create', sessionController.loginRequired, quizController.create);
-router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizController.edit);
-router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.update);
-router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.destroy);
+router.get('/quizes', quizController.filterquestions);												// presentar la lista de preguntas según el filtro guardado
+router.get('/quizes/all', quizController.allquestions);												// presentar la lista de TODAS las presentas
+router.get('/quizes/filter', quizController.filter, quizController.filterquestions);				// actualizar el filtro de preguntas y presentar la lista de preguntas según éste
+router.get('/quizes/:quizId(\\d+)', quizController.show);											// presentar el formulario PREGUNTA
+router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);									// presentar el resultado de validar la respuesta
+router.get('/quizes/new', sessionController.loginRequired, quizController.new);						// presentar el formulario de alta de preguntas
+router.post('/quizes/create', sessionController.loginRequired, quizController.create);				// INSERTAR la pregunta en BBDD y volver a la lista de preguntas
+router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizController.edit);		// presentar el formulario de modificación de preguntas
+router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.update);		// ACTUALIZAR la pregunta y volver a la lista de preguntas
+router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.destroy);	// BORRAR la pregunta y volver a la lista de preguntas
 
 // Definición de rutas de comentarios
 router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
@@ -47,6 +42,9 @@ router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/delete', sessionCont
 
 // Definición de rutas de créditos
 router.get('/quizes/author', quizController.author);
+
+// Definición de rutas de estadísticas
+router.get('/quizes/statistics', statisticsController.statistics);
 
 module.exports = router;
 

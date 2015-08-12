@@ -1,6 +1,6 @@
 		<form method="get" action="/quizes/<%= quiz.id %>/answer">
 			<strong>Pregunta de <%= quiz.tematica %>:</strong> <p> <%= quiz.pregunta %> <p>
-			<input type="text" name="respuesta" placeholder="Responda aqui "/>
+			<input autofocus required type="text" name="respuesta" placeholder="Responda aqui "/>
 			<input type="submit" value="Enviar"/>
 			<a href="/quizes"><button type="button">Volver </button></a>
 		</form>

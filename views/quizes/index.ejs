@@ -1,6 +1,9 @@
 	<form method="get" action="/quizes/filter">
-			<input type="text" name="search" placeholder="Texto a buscar " value="<%= filter %>"/>
+			<input autofocus required type="text" name="search" placeholder="Texto a buscar " value="<%= filter %>"/>
 			<input type="submit" value="Filtrar"/>
+			<% if (filter != '') { %>
+				<a href="/quizes/all"><button type="button">Todas </button></a>
+			<% } %>
 			<% if (session.user) { %>
 				<a href="/quizes/new"><button type="button">Nueva </button></a>
 			<% } %>
@@ -11,7 +14,11 @@
 			<tr>
 				<td>
 					<!-- Se presenta la temática con la primera letra en mayúsculas -->
-					<%= quizes[i].tematica.charAt(0).toUpperCase() + quizes[i].tematica.slice(1)  %>
+					<% if ((quizes[i].tematica || '') == '') { %>
+						<%= quizes[i].tematica %>
+					<% } else {%>
+						<%= quizes[i].tematica.charAt(0).toUpperCase() + quizes[i].tematica.slice(1) %>
+					<% } %>
 				</td>
 				<td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
 				<% if (session.user) { %>
@@ -22,7 +29,6 @@
 						</form>
 					</td>
 				<% } %>
-
 			</tr>
 		<% } %>
 	</table><p>

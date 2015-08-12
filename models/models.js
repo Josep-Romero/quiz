@@ -35,8 +35,8 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 var Comment = sequelize.import(path.join(__dirname, 'comment'));
 
 // Relacionar 1 Quiz con N Comment
-Comment.belongsTo(Quiz);
-Quiz.hasMany(Comment);
+Comment.belongsTo(Quiz, {onDelete: 'cascade'});
+Quiz.hasMany(Comment, {onDelete: 'cascade'});
 
 // exportar la definición de la tabla Quiz
 exports.Quiz = Quiz; 

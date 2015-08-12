@@ -1,8 +1,5 @@
 		<label for="tema" class="rem">Tematica: </label>
-		<select 
-			type="text" 
-			id="tema" 
-			name="quiz[tematica]" 
+		<select type="text" id="tema" name="quiz[tematica]" 
 			<% if (quiz.tematica==="") { %>	placeholder="Seleccione..." <% } %>
 		>
 			<option <% if (quiz.tematica==="otro") { %>	selected="selected" <% } %> value="otro">Otro</option>
@@ -13,22 +10,12 @@
 		</select>
 		<p>
 		<label for="preg" class="rem">Pregunta: </label>
-		<input 
-			type="text" 
-			id="preg" 
-			name="quiz[pregunta]" 
-			size= "20" 
-			value="<%= quiz.pregunta %>"
+		<input autofocus required type="text" id="preg" name="quiz[pregunta]" size= "20" value="<%= quiz.pregunta %>" 
 			<% if (quiz.pregunta==="") { %>	placeholder="Texto de la pregunta" <% } %>
 		/> 
 		<p>
 		<label for="resp" class="rem">Respuesta: </label>
-		<input 
-			type="text" 
-			id="resp" 
-			name="quiz[respuesta]" 
-			size= "20" 
-			value="<%= quiz.respuesta %>"
+		<input  required type="text" id="resp" name="quiz[respuesta]" size= "20" value="<%= quiz.respuesta %>"
 			<% if (quiz.respuesta==="") { %> placeholder="Respuesta a la pregunta" <% } %>
 		/> 
 		<p>

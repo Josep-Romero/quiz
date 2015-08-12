@@ -1,6 +1,6 @@
 		Añadir comentario<p>
 		<form method="post" action="/quizes/<%= quizid %>/comments/"> 
-			<input type="text" id="comment" name="comment[texto]" value=""/> <p>
+			<input autofocus required type="text" id="comment" name="comment[texto]" value="" placeholder="Introduzca el comentario" /> <p>
 			<a href="/quizes/<%= quizid %>"> <button type="button">Cancelar</button></a>
 			<button type="submit">Salvar</button>
 		</form>
